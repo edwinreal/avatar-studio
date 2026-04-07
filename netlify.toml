@@ -1,0 +1,14 @@
+[build]
+  command = "npm install && npm run build -w @studio/web"
+  publish = "apps/web/dist"
+
+[build.environment]
+  NODE_VERSION = "20"
+  VITE_API_URL = "https://synapse-studios-api.onrender.com"
+
+[dev]
+  framework = "vite"
+  command = "npm run dev:web"
+  targetPort = 5173
+  port = 8888
+  publish = "apps/web/dist"

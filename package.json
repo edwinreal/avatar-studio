@@ -1,0 +1,23 @@
+{
+  "name": "avatar-cinematic-studio",
+  "version": "0.1.0",
+  "private": true,
+  "workspaces": [
+    "apps/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev -w @studio/web\" \"npm run dev -w @studio/api\"",
+    "dev:web": "npm run dev -w @studio/web",
+    "dev:api": "npm run dev -w @studio/api",
+    "build": "npm run build -w @studio/web && npm run build -w @studio/api",
+    "db:up": "docker compose up -d",
+    "db:down": "docker compose down",
+    "prisma:generate": "npm run prisma:generate -w @studio/api",
+    "prisma:migrate": "npm run prisma:migrate -w @studio/api",
+    "prisma:seed": "npm run prisma:seed -w @studio/api"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
+
