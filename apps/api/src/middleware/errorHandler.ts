@@ -22,7 +22,7 @@ export const errorHandler = (
 
   if (err instanceof z.ZodError) {
     const errors = err.errors.reduce(
-      (acc, error) => {
+      (acc: Record<string, string[]>, error) => {
         const path = error.path.join(".");
         if (!acc[path]) {
           acc[path] = [];
