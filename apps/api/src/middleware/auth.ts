@@ -1,7 +1,11 @@
 import jwt from "jsonwebtoken";
 import type { NextFunction, Request, Response } from "express";
 
-const JWT_SECRET = process.env.JWT_SECRET?.trim() || "synapse-dev-secret";
+const JWT_SECRET = process.env.JWT_SECRET?.trim();
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET environment variable is required but not set");
+}
 
 export type AuthenticatedRequest = Request & {
   auth?: {

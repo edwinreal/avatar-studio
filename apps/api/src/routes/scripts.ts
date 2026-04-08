@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth.js";
 import { scriptsRepository } from "../services/repositories.js";
+import { createScriptSchema, updateScriptSchema } from "../validators.js";
 
 export const scriptsRouter = Router();
 
@@ -24,28 +25,39 @@ scriptsRouter.get("/:id", async (request: AuthenticatedRequest, response) => {
 }); 
 
 scriptsRouter.post("/", async (request: AuthenticatedRequest, response) => {
-  const { title, content, sceneId = "scene_unassigned" } = request.body ?? {};
+  const validated = createScriptSchema.safeParse(request.body);
 
-  if (!title || !content) {
-    response.status(400).json({ error: "title and content are required" });
+  if (!validated.success) {
+    response.status(400).json({
+      error: "Validation error",
+      details: validated.error.flatten().fieldErrors
+    });
     return;
   }
 
   const script = await scriptsRepository.create({
     ownerId: request.auth!.userId,
-    title,
-    content,
-    sceneId
+    ...validated.data
   });
 
   response.status(201).json(script);
 });
 
 scriptsRouter.patch("/:id", async (request: AuthenticatedRequest, response) => {
+  const validated = updateScriptSchema.safeParse(request.body);
+
+  if (!validated.success) {
+    response.status(400).json({
+      error: "Validation error",
+      details: validated.error.flatten().fieldErrors
+    });
+    return;
+  }
+
   const updated = await scriptsRepository.update(
     String(request.params.id),
     request.auth!.userId,
-    request.body ?? {}
+    validated.data
   );
   if (!updated) {
     response.status(404).json({ error: "Script not found" });

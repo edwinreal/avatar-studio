@@ -5,7 +5,11 @@ import { mongoStatus } from "../db/mongo.js";
 import { UserModel } from "../models/user.js";
 import type { UserRecord } from "../types.js";
 
-const JWT_SECRET = process.env.JWT_SECRET?.trim() || "synapse-dev-secret";
+const JWT_SECRET = process.env.JWT_SECRET?.trim();
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET environment variable is required but not set");
+}
 
 const useMongo = () => mongoStatus().connected;
 

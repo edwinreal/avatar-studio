@@ -12,17 +12,69 @@ import { ScriptModel } from "../models/script.js";
 import { UserModel } from "../models/user.js";
 import { VaultModel } from "../models/vault.js";
 import { VocabularyModel } from "../models/vocabulary.js";
-import type { TagKind } from "../types.js";
+import type { TagKind, ScriptRecord, UserRecord, VaultRecord, VocabularyRecord } from "../types.js";
 
 const useMongo = () => mongoStatus().connected;
 
-const mapScriptDoc = (doc: any) => ({
+// MongoDB document types
+interface MongoScriptTag {
+  label: TagKind;
+  value: string;
+  sceneId: string;
+}
+
+interface MongoScriptDoc {
+  _id: Types.ObjectId;
+  ownerId: string;
+  title: string;
+  content: string;
+  sceneId: string;
+  tags: MongoScriptTag[];
+  visualPrompts: string[];
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+interface MongoUserDoc {
+  _id: Types.ObjectId;
+  name: string;
+  email: string;
+  syncLevel: number;
+  streakDays: number;
+  createdAt?: Date;
+}
+
+interface MongoVocabularyDoc {
+  _id: Types.ObjectId;
+  ownerId: string;
+  term: string;
+  type: TagKind;
+  meaning: string;
+  sceneId: string;
+  scriptId: string;
+  assetUrl: string;
+  createdAt?: Date;
+}
+
+interface MongoVaultDoc {
+  _id: Types.ObjectId;
+  ownerId: string;
+  vocabularyId: string;
+  sceneId: string;
+  cloudinaryPublicId: string;
+  secureUrl: string;
+  assetType: string;
+  notes: string;
+  createdAt?: Date;
+}
+
+const mapScriptDoc = (doc: MongoScriptDoc): ScriptRecord => ({
   id: doc._id.toString(),
   ownerId: doc.ownerId,
   title: doc.title,
   content: doc.content,
   sceneId: doc.sceneId,
-  tags: (doc.tags ?? []).map((tag: any) => ({
+  tags: (doc.tags ?? []).map((tag) => ({
     id: `${doc._id.toString()}-${tag.label}-${tag.value}`,
     label: tag.label,
     value: tag.value,
@@ -35,7 +87,7 @@ const mapScriptDoc = (doc: any) => ({
   updatedAt: doc.updatedAt?.toISOString?.() ?? new Date().toISOString()
 });
 
-const mapUserDoc = (doc: any) => ({
+const mapUserDoc = (doc: MongoUserDoc): UserRecord => ({
   id: doc._id.toString(),
   name: doc.name,
   email: doc.email,
@@ -44,7 +96,7 @@ const mapUserDoc = (doc: any) => ({
   createdAt: doc.createdAt?.toISOString?.() ?? new Date().toISOString()
 });
 
-const mapVocabularyDoc = (doc: any) => ({
+const mapVocabularyDoc = (doc: MongoVocabularyDoc): VocabularyRecord => ({
   id: doc._id.toString(),
   ownerId: doc.ownerId,
   term: doc.term,
@@ -56,7 +108,7 @@ const mapVocabularyDoc = (doc: any) => ({
   createdAt: doc.createdAt?.toISOString?.() ?? new Date().toISOString()
 });
 
-const mapVaultDoc = (doc: any) => ({
+const mapVaultDoc = (doc: MongoVaultDoc): VaultRecord => ({
   id: doc._id.toString(),
   ownerId: doc.ownerId,
   vocabularyId: doc.vocabularyId,

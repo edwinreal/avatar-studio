@@ -21,6 +21,8 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 const STORAGE_KEY = "synapse-auth";
 
+// Use sessionStorage instead of localStorage for better security (XSS protection)
+
 type StoredSession = {
   token: string;
   user: UserRecord;
@@ -31,7 +33,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<UserRecord | null>(null);
 
   useEffect(() => {
-    const raw = window.localStorage.getItem(STORAGE_KEY);
+    const raw = window.sessionStorage.getItem(STORAGE_KEY);
     if (!raw) {
       return;
     }
@@ -42,7 +44,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setUser(session.user);
       setAuthToken(session.token);
     } catch (_error) {
-      window.localStorage.removeItem(STORAGE_KEY);
+      window.sessionStorage.removeItem(STORAGE_KEY);
     }
   }, []);
 
@@ -50,14 +52,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setToken(session.token);
     setUser(session.user);
     setAuthToken(session.token);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
+    window.sessionStorage.setItem(STORAGE_KEY, JSON.stringify(session));
   };
 
   const logout = () => {
     setToken(null);
     setUser(null);
     setAuthToken(null);
-    window.localStorage.removeItem(STORAGE_KEY);
+    window.sessionStorage.removeItem(STORAGE_KEY);
   };
 
   const value = useMemo<AuthContextValue>(

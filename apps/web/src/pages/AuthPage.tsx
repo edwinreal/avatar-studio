@@ -5,9 +5,9 @@ import { useAuth } from "../auth/AuthContext";
 export function AuthPage() {
   const { isAuthenticated, login, register } = useAuth();
   const [mode, setMode] = useState<"login" | "register">("login");
-  const [name, setName] = useState("Synapse Pilot");
-  const [email, setEmail] = useState("pilot@synapsestudios.app");
-  const [password, setPassword] = useState("studio123");
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [status, setStatus] = useState(
     "Accede para vincular guiones, vault y progreso a una sesión."
   );

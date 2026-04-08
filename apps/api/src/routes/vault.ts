@@ -2,6 +2,7 @@ import { Router } from "express";
 import { requireAuth, type AuthenticatedRequest } from "../middleware/auth.js";
 import { vaultRepository } from "../services/repositories.js";
 import { uploadRemoteAsset } from "../services/cloudinary.js";
+import { createVaultAssetSchema } from "../validators.js";
 
 export const vaultRouter = Router();
 
@@ -18,30 +19,19 @@ vaultRouter.get("/", async (request: AuthenticatedRequest, response) => {
 });
 
 vaultRouter.post("/", async (request: AuthenticatedRequest, response) => {
-  const {
-    vocabularyId,
-    sceneId,
-    cloudinaryPublicId,
-    secureUrl,
-    assetType = "video",
-    notes = ""
-  } = request.body ?? {};
+  const validated = createVaultAssetSchema.safeParse(request.body);
 
-  if (!vocabularyId || !sceneId || !cloudinaryPublicId) {
-    response
-      .status(400)
-      .json({ error: "vocabularyId, sceneId and cloudinaryPublicId are required" });
+  if (!validated.success) {
+    response.status(400).json({
+      error: "Validation error",
+      details: validated.error.flatten().fieldErrors
+    });
     return;
   }
 
   const item = await vaultRepository.create({
     ownerId: request.auth!.userId,
-    vocabularyId,
-    sceneId,
-    cloudinaryPublicId,
-    secureUrl,
-    assetType,
-    notes
+    ...validated.data
   });
   response.status(201).json(item);
 });
