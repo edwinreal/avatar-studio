@@ -1,11 +1,6 @@
 import jwt from "jsonwebtoken";
 import type { NextFunction, Request, Response } from "express";
-
-const JWT_SECRET = process.env.JWT_SECRET?.trim();
-
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET environment variable is required but not set");
-}
+import { getRequiredEnv } from "../config.js";
 
 export type AuthenticatedRequest = Request & {
   auth?: {
@@ -30,7 +25,7 @@ export const requireAuth = (
   const token = authorization.slice("Bearer ".length);
 
   try {
-    const payload = jwt.verify(token, JWT_SECRET) as {
+    const payload = jwt.verify(token, getRequiredEnv("JWT_SECRET")) as {
       sub: string;
       email: string;
       name: string;

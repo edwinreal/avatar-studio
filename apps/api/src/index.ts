@@ -1,5 +1,4 @@
 import "dotenv/config";
-import { app } from "./app.js";
 import { validateEnv } from "./config.js";
 import { connectToMongo } from "./db/mongo.js";
 
@@ -8,6 +7,7 @@ const port = Number(process.env.PORT ?? 4000);
 const startServer = async () => {
   try {
     validateEnv();
+    const { app } = await import("./app.js");
     const mongo = await connectToMongo();
 
     app.listen(port, () => {

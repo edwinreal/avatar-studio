@@ -2,15 +2,10 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { createIdFactory, db } from "../data/store.js";
+import { getRequiredEnv } from "../config.js";
 import { mongoStatus } from "../db/mongo.js";
 import { UserModel } from "../models/user.js";
 import type { UserRecord } from "../types.js";
-
-const JWT_SECRET = process.env.JWT_SECRET?.trim();
-
-if (!JWT_SECRET) {
-  throw new Error("JWT_SECRET environment variable is required but not set");
-}
 
 const useMongo = () => mongoStatus().connected;
 
@@ -30,7 +25,7 @@ const buildToken = (user: { id: string; email: string; name: string }) =>
       email: user.email,
       name: user.name
     },
-    JWT_SECRET,
+    getRequiredEnv("JWT_SECRET"),
     { expiresIn: "7d" }
   );
 
