@@ -46,7 +46,7 @@ export const createVaultAssetSchema = z.object({
   sceneId: z.string().min(1, "sceneId is required"),
   cloudinaryPublicId: z.string().min(1, "cloudinaryPublicId is required"),
   secureUrl: z.string().url().optional(),
-  assetType: z.enum(["image", "video", "audio", "3d-model"]).default("video"),
+  assetType: z.enum(["image", "video", "prompt"]).default("video"),
   notes: z.string().default("")
 });
 
@@ -55,7 +55,7 @@ export const updateVaultAssetSchema = z.object({
   sceneId: z.string().min(1).optional(),
   cloudinaryPublicId: z.string().min(1).optional(),
   secureUrl: z.string().url().optional(),
-  assetType: z.enum(["image", "video", "audio", "3d-model"]).optional(),
+  assetType: z.enum(["image", "video", "prompt"]).optional(),
   notes: z.string().optional()
 });
 

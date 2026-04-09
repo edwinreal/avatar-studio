@@ -63,7 +63,7 @@ interface MongoVaultDoc {
   sceneId: string;
   cloudinaryPublicId: string;
   secureUrl: string;
-  assetType: string;
+  assetType: "image" | "video" | "prompt";
   notes: string;
   createdAt?: Date;
 }

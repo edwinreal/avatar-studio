@@ -1,3 +1,4 @@
+// @ts-ignore - bcryptjs has incomplete types
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { createIdFactory, db } from "../data/store.js";
