@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: synapse-studios-api
+    name: avatar-studio-api
     env: node
     plan: free
     buildCommand: "npm install && npm run build -w @studio/api"
@@ -8,19 +8,29 @@ services:
     healthCheckPath: /health
     autoDeploy: true
     envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
       - key: MONGODB_URI
         sync: false
       - key: MONGODB_DB
         sync: false
-      - key: OPENAI_API_KEY
-        sync: false
-      - key: CLOUDINARY_CLOUD_NAME
-        sync: false
-      - key: CLOUDINARY_API_KEY
-        sync: false
-      - key: CLOUDINARY_API_SECRET
-        sync: false
       - key: JWT_SECRET
         sync: false
-      - key: PORT
-        value: "10000"
+      - key: JWT_EXPIRES_IN
+        value: "7d"
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: MINIO_ENDPOINT
+        sync: false
+      - key: MINIO_PORT
+        value: "9000"
+      - key: MINIO_USE_SSL
+        value: "true"
+      - key: MINIO_ACCESS_KEY
+        sync: false
+      - key: MINIO_SECRET_KEY
+        sync: false
+      - key: MINIO_BUCKET
+        value: "avatar-studio"
