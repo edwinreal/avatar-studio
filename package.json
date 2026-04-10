@@ -1,5 +1,5 @@
 {
-  "name": "avatar-cinematic-studio",
+  "name": "avatar-studio",
   "version": "0.1.0",
   "private": true,
   "workspaces": [
@@ -12,12 +12,9 @@
     "build": "npm run build -w @studio/web && npm run build -w @studio/api",
     "db:up": "docker compose up -d",
     "db:down": "docker compose down",
-    "prisma:generate": "npm run prisma:generate -w @studio/api",
-    "prisma:migrate": "npm run prisma:migrate -w @studio/api",
-    "prisma:seed": "npm run prisma:seed -w @studio/api"
+    "db:logs": "docker compose logs -f mongodb"
   },
   "devDependencies": {
     "concurrently": "^9.2.1"
   }
 }
-
